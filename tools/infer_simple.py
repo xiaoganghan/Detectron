@@ -99,6 +99,8 @@ def main(args):
     model = infer_engine.initialize_model_from_cfg()
     dummy_coco_dataset = dummy_datasets.get_coco_dataset()
 
+    model_name = args.cfg.split('/')[-1].split('.')[0]
+
     if os.path.isdir(args.im_or_folder):
         im_list = glob.iglob(args.im_or_folder + '/*.' + args.image_ext)
     else:
@@ -106,7 +108,7 @@ def main(args):
 
     for i, im_name in enumerate(im_list):
         out_name = os.path.join(
-            args.output_dir, '{}'.format(os.path.basename(im_name) + '.pdf')
+            args.output_dir, '{}_{}.jpg'.format(os.path.basename(im_name), model_name)
         )
         logger.info('Processing {} -> {}'.format(im_name, out_name))
         im = cv2.imread(im_name)
@@ -128,6 +130,7 @@ def main(args):
         vis_utils.vis_one_image(
             im[:, :, ::-1],  # BGR -> RGB for visualization
             im_name,
+            out_name,
             args.output_dir,
             cls_boxes,
             cls_segms,
@@ -136,7 +139,8 @@ def main(args):
             box_alpha=0.3,
             show_class=True,
             thresh=0.7,
-            kp_thresh=2
+            kp_thresh=2,
+            dpi=300
         )
 
 

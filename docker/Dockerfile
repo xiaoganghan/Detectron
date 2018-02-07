@@ -25,5 +25,7 @@ RUN make
 # Build custom ops
 RUN make ops
 
+COPY lib/utils/vis.py /detectron/lib/utils/vis.py
+
 # Go to Detectron root
 WORKDIR /detectron
